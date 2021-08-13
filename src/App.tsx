@@ -102,13 +102,6 @@ function App () {
     }
 
 
-    const changeTaskTitle = (taskId: string, title: string, ToDoListID: string) => {
-
-        tasks[ToDoListID] = tasks[ToDoListID].map ((t) => t.id === taskId ? {...t, title} : t)
-
-
-        setTasks ({...tasks})
-    }
 
 
     const componentsToDoList = ToDoList.map ((t) => {
