@@ -47,7 +47,7 @@ export function Todolist (props: TodolistPropsType) {
         </h3>
 
 
-        <AddItemForm addItem={addTask}/>
+        <AddItemForm addItem={addTask }/>
 
 
         <ul>
