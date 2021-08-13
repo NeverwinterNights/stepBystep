@@ -96,10 +96,7 @@ function App () {
 
     }
 
-    const changeToDoTitle = (title: string, ToDoListID: string) => {
-        setToDoList (ToDoList.map ((t) => t.id === ToDoListID ? {...t, title} : t))
 
-    }
 
 
     const changeTaskTitle = (taskId: string, title: string, ToDoListID: string) => {
