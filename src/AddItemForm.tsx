@@ -1,4 +1,6 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
+import {Button, IconButton, TextField} from "@material-ui/core";
+import {AddCircle} from "@material-ui/icons";
 
 
 type  AddItemFormPropsType = {
@@ -6,7 +8,7 @@ type  AddItemFormPropsType = {
 }
 
 
-export const AddItemForm = (props:AddItemFormPropsType) => {
+export const AddItemForm = (props: AddItemFormPropsType) => {
 
     const [value, setValue] = useState ("");
     const [error, setError] = useState ("");
@@ -30,15 +32,17 @@ export const AddItemForm = (props:AddItemFormPropsType) => {
         props.addItem (value.trim ())
         setValue ("")
     }
-
+    const errorMessage = "Title is required"
 
     return (
         <div>
-            <div>
-                <input value={value} onChange={onChangeHandler} onKeyPress={onKeyPressHandler}
-                       className={error ? "error" : ""}/>
-                <button onClick={addItem}>+</button>
-                {error && <div className={"error-message"}>{error}</div>}
+            <div style={{display: "flex", alignItems: "center"}}>
+                <TextField size={"small"} helperText={error && errorMessage} variant={"outlined"} label={"Type value"}
+                           value={value} onChange={onChangeHandler}
+                           onKeyPress={onKeyPressHandler}
+                           error={!!error}/>
+                <IconButton onClick={addItem} color={"primary"}><AddCircle/></IconButton>
+
             </div>
         </div>
     );
