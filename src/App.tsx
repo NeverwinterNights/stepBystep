@@ -8,26 +8,22 @@ import {IconButton, Toolbar, Typography, Button, Container, Grid, Paper} from "@
 import {Menu} from "@material-ui/icons";
 
 export  type  filteredType = "all" | "active" | "completed"
-
+export  type  ToDoListType = {
+    id: string
+    title: string
+    filter: filteredType
+}
+export  type  TaskStateType = {
+    [key: string]: Array<TaskType>
+}
 
 function App () {
 
 
-    type  ToDoListType = {
-        id: string
-        title: string
-        filter: filteredType
-    }
-
-
-    type  TaskStateType = {
-        [key: string]: Array<TaskType>
-    }
-
     const ToDoListID_1 = v1 ()
     const ToDoListID_2 = v1 ()
 
-    const [ToDoList, setToDoList] = useState<Array<ToDoListType>> ([
+    const [toDoList, setToDoList] = useState<Array<ToDoListType>> ([
         {id: ToDoListID_1, title: "What to learn", filter: "all"},
         {id: ToDoListID_2, title: "What to buy", filter: "all"}
     ]);
@@ -44,8 +40,6 @@ function App () {
             {id: v1 (), title: "HTML&CSS", isDone: true},
             {id: v1 (), title: "JS", isDone: true},
             {id: v1 (), title: "ReactJS", isDone: false}]
-
-
     })
 
 
@@ -54,22 +48,11 @@ function App () {
         tasks[ToDoListID] = tasks[ToDoListID].filter ((t) => t.id !== id)
         setTasks ({...tasks})
     }
-
     const addTask = (title: string, ToDoListID: string) => {
         let newTask = {id: v1 (), title: title, isDone: false}
         tasks[ToDoListID] = [newTask, ...tasks[ToDoListID]]
         setTasks ({...tasks})
     }
-
-    const addToDoList = (title: string) => {
-        const ToDoListID = v1 ()
-        const newToDoList: ToDoListType = {
-            id: ToDoListID, title: title, filter: "all",
-        }
-        setToDoList ([...ToDoList, newToDoList])
-        setTasks ({...tasks, [ToDoListID]: []})
-    }
-
     const changeStatus = (taskId: string, isDone: boolean, ToDoListID: string) => {
 
         tasks[ToDoListID] = tasks[ToDoListID].map ((t) => t.id === taskId ? {...t, isDone} : t)
@@ -77,9 +60,34 @@ function App () {
 
         setTasks ({...tasks})
     }
+    const changeTaskTitle = (taskId: string, title: string, ToDoListID: string) => {
+
+        tasks[ToDoListID] = tasks[ToDoListID].map ((t) => t.id === taskId ? {...t, title} : t)
+
+
+        setTasks ({...tasks})
+    }
+
+
+    const changeToDoFilter = (filter: filteredType, ToDoListID: string) => {
+        setToDoList (toDoList.map ((t) => t.id === ToDoListID ? {...t, filter} : t))
+
+    }
+    const changeToDoTitle = (title: string, ToDoListID: string) => {
+        setToDoList (toDoList.map ((t) => t.id === ToDoListID ? {...t, title} : t))
+
+    }
     const removeToDoList = (ToDoListID: string) => {
-        setToDoList (ToDoList.filter ((t) => t.id !== ToDoListID))
+        setToDoList (toDoList.filter ((t) => t.id !== ToDoListID))
         delete tasks[ToDoListID]
+    }
+    const addToDoList = (title: string) => {
+        const ToDoListID = v1 ()
+        const newToDoList: ToDoListType = {
+            id: ToDoListID, title: title, filter: "all",
+        }
+        setToDoList ([...toDoList, newToDoList])
+        setTasks ({...tasks, [ToDoListID]: []})
     }
 
 
@@ -93,27 +101,7 @@ function App () {
             return tasks[ToDoList.id]
         }
     }
-
-    const changeToDoFilter = (filter: filteredType, ToDoListID: string) => {
-        setToDoList (ToDoList.map ((t) => t.id === ToDoListID ? {...t, filter} : t))
-
-    }
-
-    const changeToDoTitle = (title: string, ToDoListID: string) => {
-        setToDoList (ToDoList.map ((t) => t.id === ToDoListID ? {...t, title} : t))
-
-    }
-
-    const changeTaskTitle = (taskId: string, title: string, ToDoListID: string) => {
-
-        tasks[ToDoListID] = tasks[ToDoListID].map ((t) => t.id === taskId ? {...t, title} : t)
-
-
-        setTasks ({...tasks})
-    }
-
-
-    const componentsToDoList = ToDoList.map ((t) => {
+    const componentsToDoList = toDoList.map ((t) => {
         return (
             <Grid item>
                 <Paper style={{padding: "20px"}} elevation={5}>
@@ -151,7 +139,7 @@ function App () {
                 </Toolbar>
             </AppBar>
             <Container fixed>
-                <Grid container style={{marginTop: "20px"}} >
+                <Grid container style={{marginTop: "20px"}}>
                     <AddItemForm addItem={addToDoList}/>
                 </Grid>
                 <Grid container spacing={5} style={{marginTop: "20px"}}>

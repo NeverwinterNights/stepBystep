@@ -1,4 +1,4 @@
-import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
+import React, {ChangeEvent} from 'react';
 import {filteredType} from "./App";
 import {AddItemForm} from "./AddItemForm";
 import {EditableSpan} from "./EditableSpan";
@@ -68,8 +68,8 @@ export function Todolist (props: TodolistPropsType) {
                 }
                 return <li key={t.id} className={t.isDone ? "is-done " : ""}>
                     <Checkbox color={"primary"}
-                           onChange={onChangeInputHandler}
-                           checked={t.isDone}/>
+                              onChange={onChangeInputHandler}
+                              checked={t.isDone}/>
                     <EditableSpan title={t.title} changeTitle={changeTaskTitle}/>
 
                     <IconButton size={"small"} onClick={onRemoveHandler}>
