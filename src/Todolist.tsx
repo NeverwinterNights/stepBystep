@@ -27,20 +27,20 @@ type TodolistPropsType = {
 
 }
 
-export function Todolist (props: TodolistPropsType) {
+export function Todolist(props: TodolistPropsType) {
 
 
-    const onAllFilter = () => props.changeFilter ("all", props.id)
-    const onActiveFilter = () => props.changeFilter ("active", props.id)
-    const onCompletedFilter = () => props.changeFilter ("completed", props.id)
+    const onAllFilter = () => props.changeFilter("all", props.id)
+    const onActiveFilter = () => props.changeFilter("active", props.id)
+    const onCompletedFilter = () => props.changeFilter("completed", props.id)
     const removeToDo = () => {
-        props.removeToDoList (props.id)
+        props.removeToDoList(props.id)
     }
     const addTask = (title: string) => {
-        props.addTask (title, props.id)
+        props.addTask(title, props.id)
     }
     const changeToDoListTitle = (title: string) => {
-        props.changeToDoTitle (title, props.id)
+        props.changeToDoTitle(title, props.id)
     }
 
     return <div>
@@ -56,15 +56,15 @@ export function Todolist (props: TodolistPropsType) {
 
         <ul>
 
-            {props.tasks.map ((t) => {
+            {props.tasks.map((t) => {
                 const onChangeInputHandler = (e: ChangeEvent<HTMLInputElement>) => {
-                    props.changeStatus (t.id, e.currentTarget.checked, props.id)
+                    props.changeStatus(t.id, e.currentTarget.checked, props.id)
                 }
                 const onRemoveHandler = () => {
-                    props.removeTask (t.id, props.id)
+                    props.removeTask(t.id, props.id)
                 }
                 const changeTaskTitle = (title: string) => {
-                    props.changeTaskTitle (t.id, title, props.id)
+                    props.changeTaskTitle(t.id, title, props.id)
                 }
                 return <li key={t.id} className={t.isDone ? "is-done " : ""}>
                     <Checkbox color={"primary"}
@@ -85,7 +85,7 @@ export function Todolist (props: TodolistPropsType) {
             <Button size={"small"} variant={"contained"}
                     color={props.filter === "all" ? "secondary" : "primary"}
                     onClick={onAllFilter}>All</Button>
-            <Button size={"small"} variant={"contained"}
+            <Button style={{margin: "0 5px"}} size={"small"} variant={"contained"}
                     color={props.filter === "active" ? "secondary" : "primary"}
                     onClick={onActiveFilter}>Active
             </Button>
