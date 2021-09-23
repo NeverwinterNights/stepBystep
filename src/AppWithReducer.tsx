@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useReducer} from 'react';
 import './App.css';
 import {TaskType, Todolist} from './Todolist';
 import {v1} from 'uuid';
@@ -6,6 +6,20 @@ import {AddItemForm} from "./AddItemForm";
 import AppBar from '@material-ui/core/AppBar/AppBar';
 import {Button, Container, Grid, IconButton, Paper, Toolbar, Typography} from "@material-ui/core";
 import {Menu} from "@material-ui/icons";
+import {
+    AddTodolistActionCreator,
+    ChangeTodolistFilterActionCreator,
+    ChangeTodolistTitleActionCreator,
+    RemoveTodolistActionCreator,
+    toDoListsReducer
+} from "./store/toDoLists-reducer";
+import {
+    AddTaskActionCreator,
+    changeTaskStatusAC,
+    changeTaskTitleAC,
+    removeTaskAC,
+    tasksReducer
+} from "./store/tasks-reducer";
 
 export  type  filteredType = "all" | "active" | "completed"
 export  type  ToDoListType = {
@@ -17,21 +31,17 @@ export  type  TaskStateType = {
     [key: string]: Array<TaskType>
 }
 
-function App() {
-
+function AppWithReducer() {
 
     const toDoListID_1 = v1()
     const toDoListID_2 = v1()
 
-    const [toDoList, setToDoList] = useState<Array<ToDoListType>>([
+    const [toDoList, dispatchToDoList] = useReducer(toDoListsReducer, [
         {id: toDoListID_1, title: "What to learn", filter: "all"},
         {id: toDoListID_2, title: "What to buy", filter: "all"}
     ]);
 
-    // const [filter, setFilter] = useState<filteredType> ("all");
-
-
-    const [tasks, setTasks] = useState<TaskStateType>({
+    const [tasks, dispatchTask] = useReducer(tasksReducer, {
         [toDoListID_1]: [  /*ковычки из за переменной?*/
             {id: v1(), title: "HTML&CSS", isDone: true},
             {id: v1(), title: "JS", isDone: true},
@@ -42,49 +52,40 @@ function App() {
             {id: v1(), title: "ReactJS", isDone: false}]
     })
 
-
     const removeTask = (id: string, ToDoListID: string) => {
-        tasks[ToDoListID] = tasks[ToDoListID].filter((t) => t.id !== id)
-        setTasks({...tasks})
+        dispatchTask(removeTaskAC(id, ToDoListID))
     }
 
     const addTask = (title: string, ToDoListID: string) => {
-        let newTask = {id: v1(), title: title, isDone: false}
-        tasks[ToDoListID] = [newTask, ...tasks[ToDoListID]]
-        setTasks({...tasks})
+        dispatchTask(AddTaskActionCreator(title, ToDoListID))
     }
 
     const changeStatus = (taskId: string, isDone: boolean, ToDoListID: string) => {
-        tasks[ToDoListID] = tasks[ToDoListID].map((t) => t.id === taskId ? {...t, isDone} : t)
-        setTasks({...tasks})
+        dispatchTask(changeTaskStatusAC(taskId, isDone, ToDoListID))
     }
 
     const changeTaskTitle = (taskId: string, title: string, ToDoListID: string) => {
-        tasks[ToDoListID] = tasks[ToDoListID].map((t) => t.id === taskId ? {...t, title} : t)
-        setTasks({...tasks})
+        dispatchTask(changeTaskTitleAC(taskId, title, ToDoListID))
     }
 
-
     const changeToDoFilter = (filter: filteredType, ToDoListID: string) => {
-        setToDoList(toDoList.map((t) => t.id === ToDoListID ? {...t, filter} : t))
+        dispatchToDoList(ChangeTodolistFilterActionCreator(filter, ToDoListID))
     }
 
     const changeToDoTitle = (title: string, ToDoListID: string) => {
-        setToDoList(toDoList.map((t) => t.id === ToDoListID ? {...t, title} : t))
+        dispatchToDoList(ChangeTodolistTitleActionCreator(title, ToDoListID))
     }
 
     const removeToDoList = (ToDoListID: string) => {
-        setToDoList(toDoList.filter((t) => t.id !== ToDoListID))
-        delete tasks[ToDoListID]
+        let action = RemoveTodolistActionCreator(ToDoListID)
+        dispatchToDoList(action)
+        dispatchTask(action)
     }
 
     const addToDoList = (title: string) => {
-        const ToDoListID = v1()
-        const newToDoList: ToDoListType = {
-            id: ToDoListID, title: title, filter: "all",
-        }
-        setToDoList([...toDoList, newToDoList])
-        setTasks({...tasks, [ToDoListID]: []})
+        let action = AddTodolistActionCreator(title)
+        dispatchToDoList(action)
+        dispatchTask(action)
     }
 
 
@@ -121,7 +122,6 @@ function App() {
         )
     })
 
-
     return (
         <div className="App">
             <AppBar position="static">
@@ -147,4 +147,4 @@ function App() {
     );
 }
 
-export default App;
+export default AppWithReducer;
