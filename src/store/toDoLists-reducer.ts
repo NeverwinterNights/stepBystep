@@ -32,6 +32,7 @@ export type  ActionType =
 
 let initialState:Array<ToDoListType> =[]
 
+
 export const toDoListsReducer = (toDoList =initialState, action: ActionType): Array<ToDoListType> => {
     switch (action.type) {
         case "REMOVE-TODOLIST": {

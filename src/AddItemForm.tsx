@@ -1,5 +1,5 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
-import { IconButton, TextField} from "@material-ui/core";
+import {IconButton, TextField} from "@material-ui/core";
 import {AddCircle} from "@material-ui/icons";
 
 
@@ -8,29 +8,32 @@ type  AddItemFormPropsType = {
 }
 
 
-export const AddItemForm = (props: AddItemFormPropsType) => {
+export const AddItemForm = React.memo( (props: AddItemFormPropsType) => {
+    console.log("AddItemForm");
 
-    const [value, setValue] = useState ("");
-    const [error, setError] = useState ("");
+    const [value, setValue] = useState("");
+    const [error, setError] = useState("");
 
 
     const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-        setValue (e.currentTarget.value)
+        setValue(e.currentTarget.value)
     }
     const onKeyPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
-        setError ("")
+        if (error!=="") {
+        setError("")
+        }
         if (e.charCode === 13) {
-            props.addItem (value)
-            setValue ("")
+            props.addItem(value)
+            setValue("")
         }
     }
     const addItem = () => {
-        if (value.trim () === "") {
-            setError ("Title is required")
+        if (value.trim() === "") {
+            setError("Title is required")
             return
         }
-        props.addItem (value.trim ())
-        setValue ("")
+        props.addItem(value.trim())
+        setValue("")
     }
     const errorMessage = "Title is required"
 
@@ -46,5 +49,5 @@ export const AddItemForm = (props: AddItemFormPropsType) => {
             </div>
         </div>
     );
-};
+});
 
